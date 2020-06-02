@@ -31321,10 +31321,38 @@ function Friend(_ref) {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.default = filterReducer;
+exports.filterReducer = filterReducer;
+exports.filterSelector = filterSelector;
 
+// The following code is for hook useReducer
 function filterReducer(state, action) {
-  switch (action) {
+  switch (action.type) {
+    case "all":
+      return {
+        sortBy: "all"
+      };
+
+    case "active":
+      return {
+        sortBy: "active"
+      };
+
+    case "inactive":
+      return {
+        sortBy: "inactive"
+      };
+    // const filteredFriends = state.friends.filter(
+    //   (friend) => friend.active === false
+    // );
+    // return { ...state, filtered: filteredFriends };
+
+    default:
+      return state;
+  }
+}
+
+function filterSelector(state, action) {
+  switch (action.sortBy) {
     case "all":
       return state;
 
@@ -31341,12 +31369,7 @@ function filterReducer(state, action) {
     default:
       return state;
   }
-} // or create a object
-// const FILTER_MAP = {
-//   all: () => true,
-//   active: (item) => item.active, // this callback will return all items that friend.active = true
-//   inactive: (item) => !item.active,
-// };
+}
 },{}],"components/FriendList.js":[function(require,module,exports) {
 "use strict";
 
@@ -31359,7 +31382,7 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _Friend = _interopRequireDefault(require("./Friend"));
 
-var _FilterReducer = _interopRequireDefault(require("./FilterReducer"));
+var _FilterReducer = require("./FilterReducer");
 
 var _usePrevious = _interopRequireDefault(require("./usePrevious"));
 
@@ -31400,7 +31423,7 @@ function FriendList(_ref) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("h1", {
     tabIndex: "-1",
     ref: addHeadingRef
-  }, "List of friends"), /*#__PURE__*/_react.default.createElement("ul", null, (0, _FilterReducer.default)(friends, filter).map(function (friend) {
+  }, "List of friends"), /*#__PURE__*/_react.default.createElement("ul", null, (0, _FilterReducer.filterSelector)(friends, filter).map(function (friend) {
     return /*#__PURE__*/_react.default.createElement(_Friend.default, {
       key: friend.id,
       friend: friend,
@@ -31449,6 +31472,8 @@ var _Edit = _interopRequireDefault(require("./Edit"));
 
 var _Toolbar = _interopRequireDefault(require("./Toolbar"));
 
+var _FilterReducer = require("./FilterReducer");
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
@@ -31492,10 +31517,12 @@ function App(props) {
       id = _useState4[0],
       setId = _useState4[1];
 
-  var _useState5 = (0, _react.useState)(""),
-      _useState6 = _slicedToArray(_useState5, 2),
-      filter = _useState6[0],
-      setFilter = _useState6[1];
+  var _useReducer = (0, _react.useReducer)(_FilterReducer.filterReducer, {
+    sortBy: ""
+  }),
+      _useReducer2 = _slicedToArray(_useReducer, 2),
+      filter = _useReducer2[0],
+      dispatch = _useReducer2[1];
 
   function add(name) {
     if (name !== "") {
@@ -31548,15 +31575,21 @@ function App(props) {
 
 
   var showAll = function showAll() {
-    return setFilter("all");
+    return dispatch({
+      type: "all"
+    });
   };
 
   var showActivate = function showActivate() {
-    return setFilter("active");
+    return dispatch({
+      type: "active"
+    });
   };
 
   var showDeactivate = function showDeactivate() {
-    return setFilter("inactive");
+    return dispatch({
+      type: "inactive"
+    });
   };
 
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement(_Form.default, {
@@ -31603,7 +31636,7 @@ var friends = [{
 App.defaultProps = {
   friends: friends
 };
-},{"react":"../node_modules/react/index.js","@reach/router":"../node_modules/@reach/router/es/index.js","nanoid":"../node_modules/nanoid/index.browser.js","./Form":"components/Form.js","./FriendList":"components/FriendList.js","./Edit":"components/Edit.js","./Toolbar":"components/Toolbar.js"}],"index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","@reach/router":"../node_modules/@reach/router/es/index.js","nanoid":"../node_modules/nanoid/index.browser.js","./Form":"components/Form.js","./FriendList":"components/FriendList.js","./Edit":"components/Edit.js","./Toolbar":"components/Toolbar.js","./FilterReducer":"components/FilterReducer.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));
@@ -31643,7 +31676,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57163" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "57795" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

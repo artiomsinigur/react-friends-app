@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import Friend from "./Friend";
-import filterReducer from "./FilterReducer";
+import { filterSelector } from "./FilterReducer";
 import usePrevious from "./usePrevious";
 
 export default function FriendList({
@@ -31,7 +31,7 @@ export default function FriendList({
         List of friends
       </h1>
       <ul>
-        {filterReducer(friends, filter).map((friend) => {
+        {filterSelector(friends, filter).map((friend) => {
           return (
             <Friend
               key={friend.id}

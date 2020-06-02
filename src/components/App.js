@@ -1,15 +1,16 @@
-import React, { useState } from "react";
+import React, { useState, useReducer } from "react";
 import { Router } from "@reach/router";
 import { nanoid } from "nanoid";
 import Form from "./Form";
 import FriendList from "./FriendList";
 import Edit from "./Edit";
 import Toolbar from "./Toolbar";
+import { filterReducer } from "./FilterReducer";
 
 export default function App(props) {
   const [friends, setFriends] = useState(props.friends);
   const [id, setId] = useState(nanoid);
-  const [filter, setFilter] = useState("");
+  const [filter, dispatch] = useReducer(filterReducer, { sortBy: "" });
 
   function add(name) {
     if (name !== "") {
@@ -49,9 +50,9 @@ export default function App(props) {
   }
 
   // Filters
-  const showAll = () => setFilter("all");
-  const showActivate = () => setFilter("active");
-  const showDeactivate = () => setFilter("inactive");
+  const showAll = () => dispatch({ type: "all" });
+  const showActivate = () => dispatch({ type: "active" });
+  const showDeactivate = () => dispatch({ type: "inactive" });
 
   return (
     <>
@@ -61,10 +62,16 @@ export default function App(props) {
         <button aria-pressed={filter.sortBy === "all"} onClick={showAll}>
           All Friends
         </button>
-        <button aria-pressed={filter.sortBy === "active"} onClick={showActivate}>
+        <button
+          aria-pressed={filter.sortBy === "active"}
+          onClick={showActivate}
+        >
           Active Friends
         </button>
-        <button aria-pressed={filter.sortBy === "inactive"} onClick={showDeactivate}>
+        <button
+          aria-pressed={filter.sortBy === "inactive"}
+          onClick={showDeactivate}
+        >
           Inactive Friends
         </button>
       </Toolbar>
