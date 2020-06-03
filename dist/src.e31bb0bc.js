@@ -30937,133 +30937,7 @@ var createRoute = function createRoute(basepath) {
 var shouldNavigate = function shouldNavigate(event) {
   return !event.defaultPrevented && event.button === 0 && !(event.metaKey || event.altKey || event.ctrlKey || event.shiftKey);
 }; ////////////////////////////////////////////////////////////////////////
-},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","invariant":"../node_modules/invariant/browser.js","create-react-context":"../node_modules/create-react-context/lib/index.js","react-lifecycles-compat":"../node_modules/react-lifecycles-compat/react-lifecycles-compat.es.js","./lib/utils":"../node_modules/@reach/router/es/lib/utils.js","./lib/history":"../node_modules/@reach/router/es/lib/history.js"}],"../node_modules/nanoid/url-alphabet/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.urlAlphabet = void 0;
-// This alphabet uses `A-Za-z0-9_-` symbols. The genetic algorithm helped
-// optimize the gzip compression for this alphabet.
-let urlAlphabet = 'ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW';
-exports.urlAlphabet = urlAlphabet;
-},{}],"../node_modules/nanoid/index.browser.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "urlAlphabet", {
-  enumerable: true,
-  get: function () {
-    return _index.urlAlphabet;
-  }
-});
-exports.random = exports.customRandom = exports.customAlphabet = exports.nanoid = void 0;
-
-var _index = require("./url-alphabet/index.js");
-
-// This file replaces `index.js` in bundlers like webpack or Rollup,
-// according to `browser` config in `package.json`.
-if ("development" !== 'production') {
-  // All bundlers will remove this block in the production bundle.
-  if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative' && typeof crypto === 'undefined') {
-    throw new Error('React Native does not have a built-in secure random generator. ' + 'If you don’t need unpredictable IDs use `nanoid/non-secure`. ' + 'For secure IDs, import `react-native-get-random-values` ' + 'before Nano ID. If you use Expo, install `expo-random` ' + 'and use `nanoid/async`.');
-  }
-
-  if (typeof msCrypto !== 'undefined' && typeof crypto === 'undefined') {
-    throw new Error('Add `if (!window.crypto) window.crypto = window.msCrypto` ' + 'before Nano ID to fix IE 11 support');
-  }
-
-  if (typeof crypto === 'undefined') {
-    throw new Error('Your browser does not have secure random generator. ' + 'If you don’t need unpredictable IDs, you can use nanoid/non-secure.');
-  }
-}
-
-var random = function random(bytes) {
-  return crypto.getRandomValues(new Uint8Array(bytes));
-};
-
-exports.random = random;
-
-var customRandom = function customRandom(alphabet, size, getRandom) {
-  // First, a bitmask is necessary to generate the ID. The bitmask makes bytes
-  // values closer to the alphabet size. The bitmask calculates the closest
-  // `2^31 - 1` number, which exceeds the alphabet size.
-  // For example, the bitmask for the alphabet size 30 is 31 (00011111).
-  // `Math.clz32` is not used, because it is not available in browsers.
-  var mask = (2 << Math.log(alphabet.length - 1) / Math.LN2) - 1; // Though, the bitmask solution is not perfect since the bytes exceeding
-  // the alphabet size are refused. Therefore, to reliably generate the ID,
-  // the random bytes redundancy has to be satisfied.
-  // Note: every hardware random generator call is performance expensive,
-  // because the system call for entropy collection takes a lot of time.
-  // So, to avoid additional system calls, extra bytes are requested in advance.
-  // Next, a step determines how many random bytes to generate.
-  // The number of random bytes gets decided upon the ID size, mask,
-  // alphabet size, and magic number 1.6 (using 1.6 peaks at performance
-  // according to benchmarks).
-  // `-~f => Math.ceil(f)` if f is a float
-  // `-~i => i + 1` if i is an integer
-
-  var step = -~(1.6 * mask * size / alphabet.length);
-  return function () {
-    var id = '';
-
-    while (true) {
-      var bytes = getRandom(step); // A compact alternative for `for (var i = 0; i < step; i++)`.
-
-      var j = step;
-
-      while (j--) {
-        // Adding `|| ''` refuses a random byte that exceeds the alphabet size.
-        id += alphabet[bytes[j] & mask] || ''; // `id.length + 1 === size` is a more compact option.
-
-        if (id.length === +size) return id;
-      }
-    }
-  };
-};
-
-exports.customRandom = customRandom;
-
-var customAlphabet = function customAlphabet(alphabet, size) {
-  return customRandom(alphabet, size, random);
-};
-
-exports.customAlphabet = customAlphabet;
-
-var nanoid = function nanoid() {
-  var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 21;
-  var id = '';
-  var bytes = crypto.getRandomValues(new Uint8Array(size)); // A compact alternative for `for (var i = 0; i < step; i++)`.
-
-  while (size--) {
-    // It is incorrect to use bytes exceeding the alphabet size.
-    // The following mask reduces the random byte in the 0-255 value
-    // range to the 0-63 value range. Therefore, adding hacks, such
-    // as empty string fallback or magic numbers, is unneccessary because
-    // the bitmask trims bytes down to the alphabet size.
-    var byte = bytes[size] & 63;
-
-    if (byte < 36) {
-      // `0-9a-z`
-      id += byte.toString(36);
-    } else if (byte < 62) {
-      // `A-Z`
-      id += (byte - 26).toString(36).toUpperCase();
-    } else if (byte < 63) {
-      id += '_';
-    } else {
-      id += '-';
-    }
-  }
-
-  return id;
-};
-
-exports.nanoid = nanoid;
-},{"./url-alphabet/index.js":"../node_modules/nanoid/url-alphabet/index.js"}],"components/Form.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","prop-types":"../node_modules/prop-types/index.js","invariant":"../node_modules/invariant/browser.js","create-react-context":"../node_modules/create-react-context/lib/index.js","react-lifecycles-compat":"../node_modules/react-lifecycles-compat/react-lifecycles-compat.es.js","./lib/utils":"../node_modules/@reach/router/es/lib/utils.js","./lib/history":"../node_modules/@reach/router/es/lib/history.js"}],"components/Form.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31315,29 +31189,176 @@ function Friend(_ref) {
 
   return isEditing ? editTemplate : viewTemplate;
 }
-},{"react":"../node_modules/react/index.js","@reach/router":"../node_modules/@reach/router/es/index.js","./usePrevious":"components/usePrevious.js","./Edit":"components/Edit.js"}],"components/FilterReducer.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","@reach/router":"../node_modules/@reach/router/es/index.js","./usePrevious":"components/usePrevious.js","./Edit":"components/Edit.js"}],"../node_modules/nanoid/url-alphabet/index.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.filterReducer = filterReducer;
+exports.urlAlphabet = void 0;
+// This alphabet uses `A-Za-z0-9_-` symbols. The genetic algorithm helped
+// optimize the gzip compression for this alphabet.
+let urlAlphabet = 'ModuleSymbhasOwnPr-0123456789ABCDEFGHNRVfgctiUvz_KqYTJkLxpZXIjQW';
+exports.urlAlphabet = urlAlphabet;
+},{}],"../node_modules/nanoid/index.browser.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "urlAlphabet", {
+  enumerable: true,
+  get: function () {
+    return _index.urlAlphabet;
+  }
+});
+exports.random = exports.customRandom = exports.customAlphabet = exports.nanoid = void 0;
+
+var _index = require("./url-alphabet/index.js");
+
+// This file replaces `index.js` in bundlers like webpack or Rollup,
+// according to `browser` config in `package.json`.
+if ("development" !== 'production') {
+  // All bundlers will remove this block in the production bundle.
+  if (typeof navigator !== 'undefined' && navigator.product === 'ReactNative' && typeof crypto === 'undefined') {
+    throw new Error('React Native does not have a built-in secure random generator. ' + 'If you don’t need unpredictable IDs use `nanoid/non-secure`. ' + 'For secure IDs, import `react-native-get-random-values` ' + 'before Nano ID. If you use Expo, install `expo-random` ' + 'and use `nanoid/async`.');
+  }
+
+  if (typeof msCrypto !== 'undefined' && typeof crypto === 'undefined') {
+    throw new Error('Add `if (!window.crypto) window.crypto = window.msCrypto` ' + 'before Nano ID to fix IE 11 support');
+  }
+
+  if (typeof crypto === 'undefined') {
+    throw new Error('Your browser does not have secure random generator. ' + 'If you don’t need unpredictable IDs, you can use nanoid/non-secure.');
+  }
+}
+
+var random = function random(bytes) {
+  return crypto.getRandomValues(new Uint8Array(bytes));
+};
+
+exports.random = random;
+
+var customRandom = function customRandom(alphabet, size, getRandom) {
+  // First, a bitmask is necessary to generate the ID. The bitmask makes bytes
+  // values closer to the alphabet size. The bitmask calculates the closest
+  // `2^31 - 1` number, which exceeds the alphabet size.
+  // For example, the bitmask for the alphabet size 30 is 31 (00011111).
+  // `Math.clz32` is not used, because it is not available in browsers.
+  var mask = (2 << Math.log(alphabet.length - 1) / Math.LN2) - 1; // Though, the bitmask solution is not perfect since the bytes exceeding
+  // the alphabet size are refused. Therefore, to reliably generate the ID,
+  // the random bytes redundancy has to be satisfied.
+  // Note: every hardware random generator call is performance expensive,
+  // because the system call for entropy collection takes a lot of time.
+  // So, to avoid additional system calls, extra bytes are requested in advance.
+  // Next, a step determines how many random bytes to generate.
+  // The number of random bytes gets decided upon the ID size, mask,
+  // alphabet size, and magic number 1.6 (using 1.6 peaks at performance
+  // according to benchmarks).
+  // `-~f => Math.ceil(f)` if f is a float
+  // `-~i => i + 1` if i is an integer
+
+  var step = -~(1.6 * mask * size / alphabet.length);
+  return function () {
+    var id = '';
+
+    while (true) {
+      var bytes = getRandom(step); // A compact alternative for `for (var i = 0; i < step; i++)`.
+
+      var j = step;
+
+      while (j--) {
+        // Adding `|| ''` refuses a random byte that exceeds the alphabet size.
+        id += alphabet[bytes[j] & mask] || ''; // `id.length + 1 === size` is a more compact option.
+
+        if (id.length === +size) return id;
+      }
+    }
+  };
+};
+
+exports.customRandom = customRandom;
+
+var customAlphabet = function customAlphabet(alphabet, size) {
+  return customRandom(alphabet, size, random);
+};
+
+exports.customAlphabet = customAlphabet;
+
+var nanoid = function nanoid() {
+  var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 21;
+  var id = '';
+  var bytes = crypto.getRandomValues(new Uint8Array(size)); // A compact alternative for `for (var i = 0; i < step; i++)`.
+
+  while (size--) {
+    // It is incorrect to use bytes exceeding the alphabet size.
+    // The following mask reduces the random byte in the 0-255 value
+    // range to the 0-63 value range. Therefore, adding hacks, such
+    // as empty string fallback or magic numbers, is unneccessary because
+    // the bitmask trims bytes down to the alphabet size.
+    var byte = bytes[size] & 63;
+
+    if (byte < 36) {
+      // `0-9a-z`
+      id += byte.toString(36);
+    } else if (byte < 62) {
+      // `A-Z`
+      id += (byte - 26).toString(36).toUpperCase();
+    } else if (byte < 63) {
+      id += '_';
+    } else {
+      id += '-';
+    }
+  }
+
+  return id;
+};
+
+exports.nanoid = nanoid;
+},{"./url-alphabet/index.js":"../node_modules/nanoid/url-alphabet/index.js"}],"components/reducers.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.filter = filter;
 exports.filterSelector = filterSelector;
+exports.friend = friend;
+
+var _nanoid = require("nanoid");
+
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
+
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
+
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
 // The following code is for hook useReducer
-function filterReducer(state, action) {
+function filter(state, action) {
   switch (action.type) {
-    case "all":
+    case "ALL":
       return {
         sortBy: "all"
       };
 
-    case "active":
+    case "ACTIVE":
       return {
         sortBy: "active"
       };
 
-    case "inactive":
+    case "INACTIVE":
       return {
         sortBy: "inactive"
       };
@@ -31369,8 +31390,53 @@ function filterSelector(state, action) {
     default:
       return state;
   }
+} // Friend reducer
+// const initialState = [{ id: "sdf23$f#", name: "Andrew", active: true }];
+
+
+function friend(state, action) {
+  switch (action.type) {
+    case "ADD":
+      return [].concat(_toConsumableArray(state), [_objectSpread(_objectSpread({}, action.payload), {}, {
+        id: "id-" + (0, _nanoid.nanoid)(),
+        active: true
+      })]);
+
+    case "EDIT":
+      return state.map(function (friend) {
+        if (friend.id === action.payload.id) {
+          return _objectSpread(_objectSpread({}, friend), {}, {
+            name: action.payload.name
+          });
+        }
+
+        return friend;
+      });
+
+    case "REMOVE":
+      return state.filter(function (friend) {
+        return friend.id !== action.payload.id;
+      });
+
+    case "REMOVE_ALL":
+      return state = [];
+
+    case "TOGGLE":
+      return state.map(function (friend) {
+        if (friend.id === action.payload.id) {
+          return _objectSpread(_objectSpread({}, friend), {}, {
+            active: !friend.active
+          });
+        }
+
+        return friend;
+      });
+
+    default:
+      return state;
+  }
 }
-},{}],"components/FriendList.js":[function(require,module,exports) {
+},{"nanoid":"../node_modules/nanoid/index.browser.js"}],"components/FriendList.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31382,7 +31448,7 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _Friend = _interopRequireDefault(require("./Friend"));
 
-var _FilterReducer = require("./FilterReducer");
+var _reducers = require("./reducers");
 
 var _usePrevious = _interopRequireDefault(require("./usePrevious"));
 
@@ -31423,7 +31489,7 @@ function FriendList(_ref) {
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("h1", {
     tabIndex: "-1",
     ref: addHeadingRef
-  }, "List of friends"), /*#__PURE__*/_react.default.createElement("ul", null, (0, _FilterReducer.filterSelector)(friends, filter).map(function (friend) {
+  }, "List of friends"), /*#__PURE__*/_react.default.createElement("ul", null, (0, _reducers.filterSelector)(friends, filter).map(function (friend) {
     return /*#__PURE__*/_react.default.createElement(_Friend.default, {
       key: friend.id,
       friend: friend,
@@ -31433,7 +31499,7 @@ function FriendList(_ref) {
     });
   })));
 }
-},{"react":"../node_modules/react/index.js","./Friend":"components/Friend.js","./FilterReducer":"components/FilterReducer.js","./usePrevious":"components/usePrevious.js"}],"components/Toolbar.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","./Friend":"components/Friend.js","./reducers":"components/reducers.js","./usePrevious":"components/usePrevious.js"}],"components/Toolbar.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -31462,8 +31528,6 @@ var _react = _interopRequireWildcard(require("react"));
 
 var _router = require("@reach/router");
 
-var _nanoid = require("nanoid");
-
 var _Form = _interopRequireDefault(require("./Form"));
 
 var _FriendList = _interopRequireDefault(require("./FriendList"));
@@ -31472,27 +31536,13 @@ var _Edit = _interopRequireDefault(require("./Edit"));
 
 var _Toolbar = _interopRequireDefault(require("./Toolbar"));
 
-var _FilterReducer = require("./FilterReducer");
+var reducer = _interopRequireWildcard(require("./reducers"));
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
 
 function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); if (enumerableOnly) symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; }); keys.push.apply(keys, symbols); } return keys; }
-
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i] != null ? arguments[i] : {}; if (i % 2) { ownKeys(Object(source), true).forEach(function (key) { _defineProperty(target, key, source[key]); }); } else if (Object.getOwnPropertyDescriptors) { Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)); } else { ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } } return target; }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
-
-function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
-
-function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter); }
-
-function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
 
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
@@ -31507,88 +31557,81 @@ function _iterableToArrayLimit(arr, i) { if (typeof Symbol === "undefined" || !(
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 function App(props) {
-  var _useState = (0, _react.useState)(props.friends),
-      _useState2 = _slicedToArray(_useState, 2),
-      friends = _useState2[0],
-      setFriends = _useState2[1];
-
-  var _useState3 = (0, _react.useState)(_nanoid.nanoid),
-      _useState4 = _slicedToArray(_useState3, 2),
-      id = _useState4[0],
-      setId = _useState4[1];
-
-  var _useReducer = (0, _react.useReducer)(_FilterReducer.filterReducer, {
+  var _useReducer = (0, _react.useReducer)(reducer.filter, {
     sortBy: ""
   }),
       _useReducer2 = _slicedToArray(_useReducer, 2),
       filter = _useReducer2[0],
-      dispatch = _useReducer2[1];
+      dispatchFilter = _useReducer2[1];
+
+  var _useReducer3 = (0, _react.useReducer)(reducer.friend, props.friends),
+      _useReducer4 = _slicedToArray(_useReducer3, 2),
+      friends = _useReducer4[0],
+      dispatch = _useReducer4[1];
 
   function add(name) {
     if (name !== "") {
-      setId((0, _nanoid.nanoid)());
-      var newFriend = {
-        id: "id-" + id,
-        name: name,
-        active: true
-      };
-      setFriends([].concat(_toConsumableArray(friends), [newFriend]));
+      dispatch({
+        type: "ADD",
+        payload: {
+          name: name
+        }
+      });
     }
   }
 
   function edit(id, name) {
-    var editedFriends = friends.map(function (item) {
-      if (item.id === id) {
-        return _objectSpread(_objectSpread({}, item), {}, {
+    if (name !== "") {
+      dispatch({
+        type: "EDIT",
+        payload: {
+          id: id,
           name: name
-        });
-      }
-
-      return item;
-    });
-    setFriends(editedFriends);
+        }
+      });
+    }
   }
 
   function remove(id) {
-    var remainingFriends = friends.filter(function (item) {
-      return item.id !== id;
+    dispatch({
+      type: "REMOVE",
+      payload: {
+        id: id
+      }
     });
-    setFriends(remainingFriends);
   }
 
   function removeAll() {
-    setFriends([]);
+    dispatch({
+      type: "REMOVE_ALL"
+    });
   }
 
   function toggleActivate(id) {
-    var activeFriend = friends.map(function (item) {
-      if (item.id === id) {
-        return _objectSpread(_objectSpread({}, item), {}, {
-          active: !item.active
-        });
+    dispatch({
+      type: "TOGGLE",
+      payload: {
+        id: id
       }
-
-      return item;
     });
-    setFriends(activeFriend);
   } // Filters
 
 
   var showAll = function showAll() {
-    return dispatch({
-      type: "all"
+    return dispatchFilter({
+      type: "ALL"
     });
   };
 
   var showActivate = function showActivate() {
-    return dispatch({
-      type: "active"
+    return dispatchFilter({
+      type: "ACTIVE"
     });
   };
 
   var showDeactivate = function showDeactivate() {
-    return dispatch({
-      type: "inactive"
+    return dispatchFilter({
+      type: "INACTIVE"
     });
   };
 
@@ -31636,7 +31679,7 @@ var friends = [{
 App.defaultProps = {
   friends: friends
 };
-},{"react":"../node_modules/react/index.js","@reach/router":"../node_modules/@reach/router/es/index.js","nanoid":"../node_modules/nanoid/index.browser.js","./Form":"components/Form.js","./FriendList":"components/FriendList.js","./Edit":"components/Edit.js","./Toolbar":"components/Toolbar.js","./FilterReducer":"components/FilterReducer.js"}],"index.js":[function(require,module,exports) {
+},{"react":"../node_modules/react/index.js","@reach/router":"../node_modules/@reach/router/es/index.js","./Form":"components/Form.js","./FriendList":"components/FriendList.js","./Edit":"components/Edit.js","./Toolbar":"components/Toolbar.js","./reducers":"components/reducers.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 var _react = _interopRequireDefault(require("react"));

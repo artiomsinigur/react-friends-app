@@ -1,6 +1,6 @@
 import React, { useRef, useEffect } from "react";
 import Friend from "./Friend";
-import { filterSelector } from "./FilterReducer";
+import { filterSelector } from "./reducers";
 import usePrevious from "./usePrevious";
 
 export default function FriendList({

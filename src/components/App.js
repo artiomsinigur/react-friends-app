@@ -1,58 +1,44 @@
-import React, { useState, useReducer } from "react";
+import React, { useReducer } from "react";
 import { Router } from "@reach/router";
-import { nanoid } from "nanoid";
 import Form from "./Form";
 import FriendList from "./FriendList";
 import Edit from "./Edit";
 import Toolbar from "./Toolbar";
-import { filterReducer } from "./FilterReducer";
+import * as reducer from "./reducers";
 
 export default function App(props) {
-  const [friends, setFriends] = useState(props.friends);
-  const [id, setId] = useState(nanoid);
-  const [filter, dispatch] = useReducer(filterReducer, { sortBy: "" });
+  const [filter, dispatchFilter] = useReducer(reducer.filter, { sortBy: "" });
+
+  const [friends, dispatch] = useReducer(reducer.friend, props.friends);
 
   function add(name) {
     if (name !== "") {
-      setId(nanoid());
-      const newFriend = { id: "id-" + id, name, active: true };
-      setFriends([...friends, newFriend]);
+      dispatch({ type: "ADD", payload: { name } });
     }
   }
 
   function edit(id, name) {
-    const editedFriends = friends.map((item) => {
-      if (item.id === id) {
-        return { ...item, name };
-      }
-      return item;
-    });
-    setFriends(editedFriends);
+    if (name !== "") {
+      dispatch({ type: "EDIT", payload: { id, name } });
+    }
   }
 
   function remove(id) {
-    const remainingFriends = friends.filter((item) => item.id !== id);
-    setFriends(remainingFriends);
+    dispatch({ type: "REMOVE", payload: { id } });
   }
 
   function removeAll() {
-    setFriends([]);
+    dispatch({ type: "REMOVE_ALL" });
   }
 
   function toggleActivate(id) {
-    const activeFriend = friends.map((item) => {
-      if (item.id === id) {
-        return { ...item, active: !item.active };
-      }
-      return item;
-    });
-    setFriends(activeFriend);
+    dispatch({ type: "TOGGLE", payload: { id } });
   }
 
   // Filters
-  const showAll = () => dispatch({ type: "all" });
-  const showActivate = () => dispatch({ type: "active" });
-  const showDeactivate = () => dispatch({ type: "inactive" });
+  const showAll = () => dispatchFilter({ type: "ALL" });
+  const showActivate = () => dispatchFilter({ type: "ACTIVE" });
+  const showDeactivate = () => dispatchFilter({ type: "INACTIVE" });
 
   return (
     <>
